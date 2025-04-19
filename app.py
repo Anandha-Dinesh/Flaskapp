@@ -4,8 +4,6 @@ import os
 from emotionalAnalysis import generate
 from agent import Ai_Pipeline
 
-# SET YOUR OPENAI API KEY
-# openai.api_key = os.getenv("OPENAI_API_KEY")  # or replace with a string if testing locally
 
 st.set_page_config(page_title="Feelink AI Friend", page_icon="💬")
 st.title("🧸 Feelink – Your Friendly Chat Companion")
@@ -50,12 +48,12 @@ for msg in st.session_state.chat_history:
 if user_input:
     # Show user message
     st.session_state.chat_history.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
+    with st.chat_message("user",avatar="👤"):
         st.markdown(user_input)
 
     # Call AI
-    with st.chat_message("assistant"):
-        with st.spinner("Typing..."):
+    with st.chat_message("Your Friend",avatar="👼"):
+        with st.spinner("Thinking..."):
             # response = openai.ChatCompletion.create(
             #     model="gpt-3.5-turbo",  # or "gpt-4" if you have access
             #     messages=[
@@ -65,8 +63,10 @@ if user_input:
             #     temperature=0.7
             # )
             # ai_reply = response.choices[0].message["content"]
-            st.markdown("thankyou")
+            
+            user_info = st.session_state.user_info
+            response = Ai_Pipeline(name=user_info["name"] ,gender=user_info["gender"], age=user_info["age"], input=user_input)
+            st.markdown(response)
 
     # Save AI response
-    user_info = st.session_state.user_info
-    st.session_state.chat_history.append({"role": "assistant", "content": Ai_Pipeline(name=user_info["name"] ,gender=user_info["gender"], age=user_info["age"], input=user_input)})
+    st.session_state.chat_history.append({"role": "assistant", "content": response})
