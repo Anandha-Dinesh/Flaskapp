@@ -8,9 +8,32 @@ import os
 st.set_page_config(page_title="Feelink AI Friend", page_icon="💬")
 st.title("🧸 Feelink – Your Friendly Chat Companion")
 
-# Initialize session state
+# Initialize session state for user info and chat history
+if "user_info" not in st.session_state:
+    st.session_state.user_info = {"name": "", "age": None, "gender": ""}
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+
+# Collect user info
+if not st.session_state.user_info["name"] or not st.session_state.user_info["age"] or not st.session_state.user_info["gender"]:
+    st.subheader("Tell us about yourself")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        name = st.text_input("Name", value=st.session_state.user_info["name"])
+    with col2:
+        age = st.number_input("Age", min_value=1, max_value=120, value=st.session_state.user_info["age"] or 10)
+    with col3:
+        gender = st.selectbox("Gender", ["", "Male", "Female", "Other"], index=0 if not st.session_state.user_info["gender"] else ["", "Male", "Female", "Other"].index(st.session_state.user_info["gender"]))
+
+    if name and age and gender:
+        st.session_state.user_info = {"name": name, "age": age, "gender": gender}
+        st.success("Thank you! You can now start chatting.")
+    else:
+        st.info("Please fill in all fields to start chatting.")
+        st.stop()
+else:
+    st.write(f"**Name:** {st.session_state.user_info['name']} | **Age:** {st.session_state.user_info['age']} | **Gender:** {st.session_state.user_info['gender']}")
+
 
 # Chat input
 user_input = st.chat_input("Say something...")
