@@ -4,4 +4,4 @@ _pycache_
 /Scripts
 /Lib
 /Include
-*.cfg
+pyvenv.cfg
