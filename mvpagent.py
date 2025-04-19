@@ -48,7 +48,7 @@ For seniors, be respectful, patient, and gentle in tone, with calming language.
 
 Always offer a sense of hope, comfort, or helpful action unless analysis suggests otherwise.
 
-Avoid overly clinical or robotic tones."""),
+Avoid overly clinical or robotic word"),
         ],
     )
 
