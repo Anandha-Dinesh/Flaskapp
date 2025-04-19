@@ -2,19 +2,31 @@ import base64
 import os
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Load variables from .env into the environment
+
+# Now you can access them
+gemini_api_key = os.getenv("GEMINI_API_KEY")
 
 
-def generate():
+
+
+
+def generate(gender,age,user_input):
+    output=""
     client = genai.Client(
-        api_key=os.environ.get("GEMINI_API_KEY"),
+        api_key=gemini_api_key,
     )
-
+    # inp_msg = "age="+age+"gender="+gender+"name="+name+"message="+message
+    inp_msg=f"""Age={age}, Gender={gender}, message={user_input}"""
     model = "gemini-2.0-flash"
     contents = [
         types.Content(
             role="user",
             parts=[
-                types.Part.from_text(text="""INSERT_INPUT_HERE"""),
+                types.Part.from_text(text=inp_msg)
             ],
         ),
     ]
@@ -52,7 +64,9 @@ def generate():
         contents=contents,
         config=generate_content_config,
     ):
-        print(chunk.text, end="")
+        output+=chunk.text
+    return output   
+
 
 if __name__ == "__main__":
     generate()

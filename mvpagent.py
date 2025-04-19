@@ -2,11 +2,16 @@ import base64
 import os
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
+load_dotenv()  # Load variables from .env into the environment
 
+# Now you can access them
+gemini_api_key = os.getenv("GEMINI_API_KEY")
 
-def generate():
+def generate(input,name):
+    output=""
     client = genai.Client(
-        api_key=os.environ.get("GEMINI_API_KEY"),
+        api_key=gemini_api_key,
     )
 
     model = "gemini-2.0-flash-lite"
@@ -14,7 +19,7 @@ def generate():
         types.Content(
             role="user",
             parts=[
-                types.Part.from_text(text="""INSERT_INPUT_HERE"""),
+                types.Part.from_text(text="Name = "+name+"Message="+input),
             ],
         ),
     ]
@@ -48,7 +53,7 @@ For seniors, be respectful, patient, and gentle in tone, with calming language.
 
 Always offer a sense of hope, comfort, or helpful action unless analysis suggests otherwise.
 
-Avoid overly clinical or robotic word"),
+Avoid overly clinical or robotic word"""),
         ],
     )
 
@@ -57,7 +62,9 @@ Avoid overly clinical or robotic word"),
         contents=contents,
         config=generate_content_config,
     ):
-        print(chunk.text, end="")
+        output+=chunk.text
+    print(output)
+    return output
 
 if __name__ == "__main__":
     generate()

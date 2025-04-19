@@ -1,13 +1,17 @@
 import streamlit as st
 # import openai
 import os
+from emotionalAnalysis import generate
+from agent import Ai_Pipeline
 
 # SET YOUR OPENAI API KEY
 # openai.api_key = os.getenv("OPENAI_API_KEY")  # or replace with a string if testing locally
 
 st.set_page_config(page_title="Feelink AI Friend", page_icon="💬")
 st.title("🧸 Feelink – Your Friendly Chat Companion")
-
+gender=''
+age=0
+name=''
 # Initialize session state for user info and chat history
 if "user_info" not in st.session_state:
     st.session_state.user_info = {"name": "", "age": None, "gender": ""}
@@ -33,7 +37,6 @@ if not st.session_state.user_info["name"] or not st.session_state.user_info["age
         st.stop()
 else:
     st.write(f"**Name:** {st.session_state.user_info['name']} | **Age:** {st.session_state.user_info['age']} | **Gender:** {st.session_state.user_info['gender']}")
-
 
 # Chat input
 user_input = st.chat_input("Say something...")
@@ -65,4 +68,5 @@ if user_input:
             st.markdown("thankyou")
 
     # Save AI response
-    st.session_state.chat_history.append({"role": "assistant", "content": "thankyou"})
+    user_info = st.session_state.user_info
+    st.session_state.chat_history.append({"role": "assistant", "content": Ai_Pipeline(name=user_info["name"] ,gender=user_info["gender"], age=user_info["age"], input=user_input)})
